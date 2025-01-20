@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Devolução de Equipamento</title>
+    <title>Cadastro de Entrega de Equipamento no Ano de 2025</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -174,12 +174,12 @@
             <label for="numeroSerie">Número de Série:</label>
             <input type="text" id="numeroSerie" name="numeroSerie" required>
 
-            <button type="submit" id="submitButton">Gerar Termo de Devolução</button>
+            <button type="submit" id="submitButton">Gerar Termo de Entrega</button>
         </form>
     </div>
 
     <div class="termo-container" id="termoContainer">
-        <h2>Termo de Devolução de Equipamento Eletrônico</h2>
+        <h2>Termo de Entrega de Equipamento Eletrônico</h2>
         <pre id="termoTexto"></pre>
         <button onclick="imprimirTermo()">Imprimir Termo</button>
     </div>
