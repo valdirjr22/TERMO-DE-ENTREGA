@@ -169,7 +169,7 @@
             </select>
 
             <label for="equipamento">Equipamento (Chromebook):</label>
-            <input type="text" id="equipamento" name="equipamento" placeholder="Ex: Chromebook Samsung KT3BR" required>
+            <input type="text" id="equipamento" name="equipamento" placeholder="Ex: Chromebook Samsung KT4BR" required>
 
             <label for="numeroSerie">Número de Série:</label>
             <input type="text" id="numeroSerie" name="numeroSerie" required>
@@ -249,7 +249,7 @@
             if (alunoEditandoIndex !== null) {
                 alunos[alunoEditandoIndex] = aluno;
                 alunoEditandoIndex = null;
-                document.getElementById("submitButton").textContent = "Gerar Termo de Devolução";
+                document.getElementById("submitButton").textContent = "Gerar Termo de entrega";
             } else {
                 alunos.push(aluno);
             }
@@ -258,6 +258,8 @@
             listarAlunos();
 
             const termo = `
+
+
 Eu, ${nome} portador do CPF ${cpf},Aluno do curso ${curso}, de Matrícula ${matricula} na Instituição Senac Paulista, da Turma/Turno ${turma}/${turno}, no ano letivo de 2025. Declaro ter Recebi o equipamento da Instituição nas condições descritas abaixo,em plenas condições de funcionamento.
 
 • Equipamento: ${equipamento} com seu Carregador
@@ -372,7 +374,7 @@ Paulista, ______ de ____________________ de 2025.
             document.getElementById("numeroSerie").value = aluno.numeroSerie;
 
             alunoEditandoIndex = index;
-            document.getElementById("submitButton").textContent = "Editar Devolução";
+            document.getElementById("submitButton").textContent = "Editar Entrega";
         }
 
         function excluirAluno(index) {
