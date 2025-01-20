@@ -1,4 +1,4 @@
-<Entrega de Equipamento no Ano de 2025>
+
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
