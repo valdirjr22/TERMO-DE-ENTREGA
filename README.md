@@ -134,12 +134,12 @@
             <table id="tabelaAlunos" class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Curso</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matrícula</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turma</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turno</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Curso</th>
+                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matrícula</th>
+                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turma</th>
+                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turno</th>
+                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -223,14 +223,14 @@ Paulista, ______ de ____________________ de 2025.
             alunos.forEach((aluno, index) => {
                 const row = tabelaAlunos.insertRow();
                 row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">${aluno.nome}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${aluno.curso}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${aluno.matricula}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${aluno.turma}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${aluno.turno}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button class="btn-editar px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
-                        <button class="btn-excluir ml-2 px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
+                    <td class="px-4 py-2 whitespace-nowrap">${aluno.nome}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">${aluno.curso}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">${aluno.matricula}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">${aluno.turma}</td>
+                    <td class="px-4 py-2 whitespace-nowrap">${aluno.turno}</td>
+                    <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="btn-editar px-2 py-1 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
+                        <button class="btn-excluir ml-1 px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
                     </td>
                 `;
             });
@@ -283,20 +283,20 @@ Paulista, ______ de ____________________ de 2025.
             if (alunosFiltrados.length === 0 && filtroNumeroSerie !== '') {
                 // If no matching students found and a serial number was searched, display message
                 const row = tabelaAlunos.insertRow();
-                row.innerHTML = `<td colspan="6" class="px-6 py-4 whitespace-nowrap text-center text-red-500 font-medium">Equipamento não localizado.</td>`;
+                row.innerHTML = `<td colspan="6" class="px-4 py-2 whitespace-nowrap text-center text-red-500 font-medium">Equipamento não localizado.</td>`;
             } else {
                 // Otherwise, populate the table with filtered students
                 alunosFiltrados.forEach((aluno, index) => {
                     const row = tabelaAlunos.insertRow();
                     row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap">${aluno.nome}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${aluno.curso}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${aluno.matricula}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${aluno.turma}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${aluno.turno}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="btn-editar px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
-                            <button class="btn-excluir ml-2 px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
+                        <td class="px-4 py-2 whitespace-nowrap">${aluno.nome}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${aluno.curso}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${aluno.matricula}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${aluno.turma}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${aluno.turno}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="btn-editar px-2 py-1 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
+                            <button class="btn-excluir ml-1 px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
                         </td>
                     `;
                 });
