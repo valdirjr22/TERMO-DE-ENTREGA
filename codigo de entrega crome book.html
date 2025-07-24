@@ -1,119 +1,23 @@
-
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Entrega de Equipamento no Ano de 2025</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 {
-            text-align: center;
-        }
-        .form-container {
-            width: 50%;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .form-container label {
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-        .form-container input,
-        .form-container select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .form-container button:hover {
-            background-color: #45a049;
-        }
-        .termo-container {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-        .termo-container pre {
-            font-family: "Courier New", Courier, monospace;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            text-align: left;
-            margin: 0 auto;
-            width: 80%;
-        }
-        .termo-container button {
-            margin-top: 20px;
-        }
-        .cursos-cadastrados {
-            margin-top: 30px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th, td {
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .btn-editar,
-        .btn-excluir {
-            padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-editar {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .btn-editar:hover {
-            background-color: #45a049;
-        }
-        .btn-excluir {
-            background-color: #f44336;
-            color: white;
-        }
-        .btn-excluir:hover {
-            background-color: #e41c1c;
-        }
-        .filtro-container {
-            margin: 20px 0;
-        }
-        .filtro-container select {
-            width: 200px;
-            margin-right: 10px;
-        }
+        /* Custom styles for print, overriding Tailwind where necessary */
         @media print {
             body {
                 margin: 0;
                 padding: 0;
                 text-align: center;
+                font-family: 'Inter', sans-serif; /* Ensure font is consistent in print */
             }
             .termo-container {
-                display: block;
+                display: block !important; /* Force display for print */
                 margin-top: 80px;
                 text-align: center;
                 width: 100%;
@@ -126,94 +30,123 @@
                 text-align: left;
                 display: block;
             }
-            .termo-container button {
-                display: none;
+            .termo-container button, .filtro-container, .form-container, .cursos-cadastrados, h1 {
+                display: none !important; /* Hide other elements when printing term */
             }
-            .form-container, .cursos-cadastrados, .filtro-container {
-                display: none;
+            /* Specific print styles for the report */
+            .print-report-only {
+                display: block !important;
             }
-            h1 {
-                display: none;
+            .print-report-only h1 {
+                display: block !important;
+            }
+            .print-report-only table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            .print-report-only th, .print-report-only td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            .print-report-only th {
+                background-color: #f2f2f2;
             }
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-4 font-inter text-gray-800">
 
-    <h1>Cadastro de Entrega de Equipamento no Ano de 2025</h1>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-center mb-8 text-blue-700">Cadastro de Entrega de Equipamento no Ano de 2025</h1>
 
-    <div class="form-container">
+    <div class="form-container w-full max-w-2xl bg-white p-8 rounded-lg shadow-xl mb-8">
         <form id="formCadastro" onsubmit="gerarTermo(event)">
-            <label for="nome">Nome Completo:</label>
-            <input type="text" id="nome" name="nome" required>
+            <label for="nome" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required>
+            <label for="cpf" class="block text-sm font-medium text-gray-700 mb-1 mt-4">CPF:</label>
+            <input type="text" id="cpf" name="cpf" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <label for="matricula">Número de Matrícula:</label>
-            <input type="text" id="matricula" name="matricula" required>
+            <label for="matricula" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Número de Matrícula:</label>
+            <input type="text" id="matricula" name="matricula" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <label for="serie">Série:</label>
-            <input type="text" id="serie" name="serie" required>
+            <label for="serie" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Série:</label>
+            <input type="text" id="serie" name="serie" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <label for="turma">Turma:</label>
-            <input type="text" id="turma" name="turma" required>
+            <label for="turma" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Turma:</label>
+            <input type="text" id="turma" name="turma" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <label for="turno">Turno:</label>
-            <input type="text" id="turno" name="turno" required>
+            <label for="turno" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Turno:</label>
+            <input type="text" id="turno" name="turno" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <label for="curso">Curso:</label>
-            <select id="curso" name="curso" required>
+            <label for="curso" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Curso:</label>
+            <select id="curso" name="curso" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 <option value="">Selecione o curso</option>
                 <option value="MédioTec">MédioTec</option>
             </select>
 
-            <label for="equipamento">Equipamento (Chromebook):</label>
-            <input type="text" id="equipamento" name="equipamento" placeholder="Ex: Chromebook Samsung KT4BR" required>
+            <label for="equipamento" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Equipamento (Chromebook):</label>
+            <input type="text" id="equipamento" name="equipamento" placeholder="Ex: Chromebook Samsung KT4BR" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <label for="numeroSerie">Número de Série:</label>
-            <input type="text" id="numeroSerie" name="numeroSerie" required>
+            <label for="numeroSerie" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Número de Série:</label>
+            <input type="text" id="numeroSerie" name="numeroSerie" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <button type="submit" id="submitButton">Gerar Termo de Entrega</button>
+            <button type="submit" id="submitButton" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-6">Gerar Termo de Entrega</button>
         </form>
     </div>
 
-    <div class="termo-container" id="termoContainer">
-        <h2>Termo de Entrega de Equipamento Eletrônico</h2>
-        <pre id="termoTexto"></pre>
-        <button onclick="imprimirTermo()">Imprimir Termo</button>
+    <div class="termo-container w-full max-w-3xl bg-white p-8 rounded-lg shadow-xl mb-8 hidden print:block" id="termoContainer">
+        <h2 class="text-2xl font-semibold text-center mb-4 text-blue-600">Termo de Entrega de Equipamento Eletrônico</h2>
+        <pre id="termoTexto" class="whitespace-pre-wrap break-words text-left mx-auto w-4/5 p-4 bg-gray-50 rounded-md border border-gray-200 text-sm"></pre>
+        <button onclick="imprimirTermo()" class="py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mt-6 print:hidden">Imprimir Termo</button>
     </div>
 
-    <div class="filtro-container">
-        <button onclick="mostrarLista()">Lista</button>
-        <label for="filtroTurma">Filtrar por Turma:</label>
-        <select id="filtroTurma" onchange="filtrarLista()">
-            <option value="">Todas as turmas</option>
-        </select>
+    <div class="filtro-container w-full max-w-3xl flex flex-wrap items-end gap-4 mb-8 p-6 bg-white rounded-lg shadow-md">
+        <button onclick="listarAlunos()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Lista</button>
 
-        <label for="filtroTurno">Filtrar por Turno:</label>
-        <select id="filtroTurno" onchange="filtrarLista()">
-            <option value="">Todos os turnos</option>
-        </select>
+        <div class="flex flex-col flex-grow">
+            <label for="filtroTurma" class="block text-sm font-medium text-gray-700">Filtrar por Turma:</label>
+            <select id="filtroTurma" onchange="filtrarLista()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <option value="">Todas as turmas</option>
+            </select>
+        </div>
+
+        <div class="flex flex-col flex-grow">
+            <label for="filtroTurno" class="block text-sm font-medium text-gray-700">Filtrar por Turno:</label>
+            <select id="filtroTurno" onchange="filtrarLista()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <option value="">Todos os turnos</option>
+            </select>
+        </div>
+
+        <div class="flex flex-col flex-grow">
+            <label for="filtroNumeroSerie" class="block text-sm font-medium text-gray-700">Pesquisar por Nº de Série:</label>
+            <input type="text" id="filtroNumeroSerie" onkeyup="filtrarLista()" placeholder="Digite o Nº de Série" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        
+        <button onclick="filtrarLista()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Pesquisar</button>
+        <button onclick="imprimirRelatorio()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Imprimir Relatório</button>
     </div>
 
-    <div class="cursos-cadastrados">
-        <h2>Alunos Cadastrados</h2>
-        <table id="tabelaAlunos">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Curso</th>
-                    <th>Matrícula</th>
-                    <th>Turma</th>
-                    <th>Turno</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Alunos cadastrados aparecerão aqui -->
-            </tbody>
-        </table>
+    <div class="cursos-cadastrados w-full max-w-4xl bg-white p-8 rounded-lg shadow-xl mb-8">
+        <h2 class="text-2xl font-semibold text-center mb-4 text-blue-600">Alunos Cadastrados</h2>
+        <div class="overflow-x-auto">
+            <table id="tabelaAlunos" class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Curso</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matrícula</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turma</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turno</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <!-- Alunos cadastrados aparecerão aqui -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -249,7 +182,7 @@
             if (alunoEditandoIndex !== null) {
                 alunos[alunoEditandoIndex] = aluno;
                 alunoEditandoIndex = null;
-                document.getElementById("submitButton").textContent = "Gerar Termo de entrega";
+                document.getElementById("submitButton").textContent = "Gerar Termo de Entrega";
             } else {
                 alunos.push(aluno);
             }
@@ -290,14 +223,14 @@ Paulista, ______ de ____________________ de 2025.
             alunos.forEach((aluno, index) => {
                 const row = tabelaAlunos.insertRow();
                 row.innerHTML = `
-                    <td>${aluno.nome}</td>
-                    <td>${aluno.curso}</td>
-                    <td>${aluno.matricula}</td>
-                    <td>${aluno.turma}</td>
-                    <td>${aluno.turno}</td>
-                    <td>
-                        <button class="btn-editar" onclick="editarAluno(${index})">Editar</button>
-                        <button class="btn-excluir" onclick="excluirAluno(${index})">Excluir</button>
+                    <td class="px-6 py-4 whitespace-nowrap">${aluno.nome}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${aluno.curso}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${aluno.matricula}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${aluno.turma}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${aluno.turno}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="btn-editar px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
+                        <button class="btn-excluir ml-2 px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
                     </td>
                 `;
             });
@@ -333,31 +266,41 @@ Paulista, ______ de ____________________ de 2025.
         function filtrarLista() {
             const filtroTurma = document.getElementById("filtroTurma").value;
             const filtroTurno = document.getElementById("filtroTurno").value;
+            const filtroNumeroSerie = document.getElementById("filtroNumeroSerie").value.toLowerCase(); // Get serial number filter value
             const alunos = JSON.parse(localStorage.getItem('alunos')) || [];
 
             const alunosFiltrados = alunos.filter(aluno => {
                 const turmaMatch = filtroTurma ? aluno.turma === filtroTurma : true;
                 const turnoMatch = filtroTurno ? aluno.turno === filtroTurno : true;
-                return turmaMatch && turnoMatch;
+                // New filter for serial number
+                const numeroSerieMatch = filtroNumeroSerie ? aluno.numeroSerie.toLowerCase().includes(filtroNumeroSerie) : true;
+                return turmaMatch && turnoMatch && numeroSerieMatch; // Combine all filters
             });
 
             const tabelaAlunos = document.getElementById("tabelaAlunos").getElementsByTagName("tbody")[0];
-            tabelaAlunos.innerHTML = "";
+            tabelaAlunos.innerHTML = ""; // Clear existing rows
 
-            alunosFiltrados.forEach((aluno, index) => {
+            if (alunosFiltrados.length === 0 && filtroNumeroSerie !== '') {
+                // If no matching students found and a serial number was searched, display message
                 const row = tabelaAlunos.insertRow();
-                row.innerHTML = `
-                    <td>${aluno.nome}</td>
-                    <td>${aluno.curso}</td>
-                    <td>${aluno.matricula}</td>
-                    <td>${aluno.turma}</td>
-                    <td>${aluno.turno}</td>
-                    <td>
-                        <button class="btn-editar" onclick="editarAluno(${index})">Editar</button>
-                        <button class="btn-excluir" onclick="excluirAluno(${index})">Excluir</button>
-                    </td>
-                `;
-            });
+                row.innerHTML = `<td colspan="6" class="px-6 py-4 whitespace-nowrap text-center text-red-500 font-medium">Equipamento não localizado.</td>`;
+            } else {
+                // Otherwise, populate the table with filtered students
+                alunosFiltrados.forEach((aluno, index) => {
+                    const row = tabelaAlunos.insertRow();
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">${aluno.nome}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${aluno.curso}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${aluno.matricula}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${aluno.turma}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${aluno.turno}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="btn-editar px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
+                            <button class="btn-excluir ml-2 px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
+                        </td>
+                    `;
+                });
+            }
         }
 
         function editarAluno(index) {
@@ -386,6 +329,61 @@ Paulista, ______ de ____________________ de 2025.
 
         function imprimirTermo() {
             window.print();
+        }
+
+        // New function to print the report
+        function imprimirRelatorio() {
+            const alunos = JSON.parse(localStorage.getItem('alunos')) || [];
+            let relatorioContent = `
+                <html>
+                <head>
+                    <title>Relatório de Entregas de Equipamentos</title>
+                    <style>
+                        body { font-family: 'Inter', sans-serif; margin: 20px; }
+                        h1 { text-align: center; color: #1e40af; } /* Tailwind blue-700 equivalent */
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 0.375rem; overflow: hidden; } /* rounded-lg */
+                        th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; } /* border-gray-200 */
+                        th { background-color: #f9fafb; color: #6b7280; font-weight: 500; text-transform: uppercase; font-size: 0.75rem; } /* bg-gray-50, text-gray-500, uppercase, tracking-wider */
+                        td { color: #1f2937; font-size: 0.875rem; } /* text-gray-900, text-sm */
+                        @media print {
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body class="print-report-only">
+                    <h1>Relatório de Entregas de Equipamentos - 2025</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome do Aluno</th>
+                                <th>Série</th>
+                                <th>Número de Série da Máquina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            alunos.forEach(aluno => {
+                relatorioContent += `
+                            <tr>
+                                <td>${aluno.nome}</td>
+                                <td>${aluno.serie}</td>
+                                <td>${aluno.numeroSerie}</td>
+                            </tr>
+                `;
+            });
+
+            relatorioContent += `
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(relatorioContent);
+            printWindow.document.close();
+            printWindow.print();
         }
 
         window.onload = listarAlunos;
