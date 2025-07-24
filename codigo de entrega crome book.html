@@ -60,9 +60,9 @@
 
     <h1 class="text-3xl md:text-4xl font-extrabold text-center mb-8 text-blue-700">Cadastro de Entrega de Equipamento no Ano de 2025</h1>
 
-    <div class="form-container w-full max-w-2xl bg-white p-8 rounded-lg shadow-xl mb-8">
+    <div id="formSection" class="form-container w-full max-w-2xl bg-white p-8 rounded-lg shadow-xl mb-8">
         <form id="formCadastro" onsubmit="gerarTermo(event)">
-            <label for="nome" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Nome Completo:</label>
+            <label for="nome" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Nome Completa:</label>
             <input type="text" id="nome" name="nome" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
             <label for="cpf" class="block text-sm font-medium text-gray-700 mb-1 mt-4">CPF:</label>
@@ -94,6 +94,8 @@
 
             <button type="submit" id="submitButton" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-6">Gerar Termo de Entrega</button>
         </form>
+        <!-- Button to view registered students -->
+        <button onclick="showStudentsList()" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 mt-4">Ver Alunos Cadastrados</button>
     </div>
 
     <div class="termo-container w-full max-w-3xl bg-white p-8 rounded-lg shadow-xl mb-8 hidden print:block" id="termoContainer">
@@ -102,44 +104,45 @@
         <button onclick="imprimirTermo()" class="py-2 px-6 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mt-6 print:hidden">Imprimir Termo</button>
     </div>
 
-    <div class="filtro-container w-full max-w-3xl flex flex-wrap items-end gap-4 mb-8 p-6 bg-white rounded-lg shadow-md">
-        <button onclick="listarAlunos()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Lista</button>
-
-        <div class="flex flex-col flex-grow">
-            <label for="filtroTurma" class="block text-sm font-medium text-gray-700">Filtrar por Turma:</label>
-            <select id="filtroTurma" onchange="filtrarLista()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                <option value="">Todas as turmas</option>
-            </select>
-        </div>
-
-        <div class="flex flex-col flex-grow">
-            <label for="filtroTurno" class="block text-sm font-medium text-gray-700">Filtrar por Turno:</label>
-            <select id="filtroTurno" onchange="filtrarLista()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                <option value="">Todos os turnos</option>
-            </select>
-        </div>
-
-        <div class="flex flex-col flex-grow">
-            <label for="filtroNumeroSerie" class="block text-sm font-medium text-gray-700">Pesquisar por Nº de Série:</label>
-            <input type="text" id="filtroNumeroSerie" onkeyup="filtrarLista()" placeholder="Digite o Nº de Série" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-        </div>
-        
-        <button onclick="filtrarLista()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Pesquisar</button>
-        <button onclick="imprimirRelatorio()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Imprimir Relatório</button>
-    </div>
-
-    <div class="cursos-cadastrados w-full max-w-4xl bg-white p-8 rounded-lg shadow-xl mb-8">
+    <div id="studentsListSection" class="cursos-cadastrados w-full max-w-4xl bg-white p-8 rounded-lg shadow-xl mb-8 hidden">
         <h2 class="text-2xl font-semibold text-center mb-4 text-blue-600">Alunos Cadastrados</h2>
+        
+        <div class="filtro-container w-full flex flex-wrap items-end gap-4 mb-8 p-6 bg-white rounded-lg shadow-md">
+            <button onclick="listarAlunos()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Lista</button>
+
+            <div class="flex flex-col flex-grow">
+                <label for="filtroTurma" class="block text-sm font-medium text-gray-700">Filtrar por Turma:</label>
+                <select id="filtroTurma" onchange="filtrarLista()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <option value="">Todas as turmas</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col flex-grow">
+                <label for="filtroTurno" class="block text-sm font-medium text-gray-700">Filtrar por Turno:</label>
+                <select id="filtroTurno" onchange="filtrarLista()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <option value="">Todos os turnos</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col flex-grow">
+                <label for="filtroNumeroSerie" class="block text-sm font-medium text-gray-700">Pesquisar por Nº de Série:</label>
+                <input type="text" id="filtroNumeroSerie" onkeyup="filtrarLista()" placeholder="Digite o Nº de Série" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            
+            <button onclick="filtrarLista()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Pesquisar</button>
+            <button onclick="imprimirRelatorio()" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Imprimir Relatório</button>
+        </div>
+
         <div class="overflow-x-auto">
             <table id="tabelaAlunos" class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Curso</th>
-                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matrícula</th>
-                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turma</th>
-                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turno</th>
-                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                        <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Curso</th>
+                        <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matrícula</th>
+                        <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turma</th>
+                        <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turno</th>
+                        <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -147,10 +150,27 @@
                 </tbody>
             </table>
         </div>
+        <!-- Button to go back to the form -->
+        <button onclick="showForm()" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-6">Voltar ao Cadastro</button>
     </div>
 
     <script>
         let alunoEditandoIndex = null;
+
+        // Function to show the form section and hide others
+        function showForm() {
+            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('termoContainer').classList.add('hidden');
+            document.getElementById('studentsListSection').classList.add('hidden');
+        }
+
+        // Function to show the students list section and hide others
+        function showStudentsList() {
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('termoContainer').classList.add('hidden');
+            document.getElementById('studentsListSection').classList.remove('hidden');
+            listarAlunos(); // Ensure the list is updated when shown
+        }
 
         function gerarTermo(event) {
             event.preventDefault();
@@ -189,6 +209,7 @@
 
             localStorage.setItem('alunos', JSON.stringify(alunos));
             listarAlunos();
+            showStudentsList(); // Show the list after generating a term
 
             const termo = `
 
@@ -223,14 +244,14 @@ Paulista, ______ de ____________________ de 2025.
             alunos.forEach((aluno, index) => {
                 const row = tabelaAlunos.insertRow();
                 row.innerHTML = `
-                    <td class="px-4 py-2 whitespace-nowrap">${aluno.nome}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">${aluno.curso}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">${aluno.matricula}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">${aluno.turma}</td>
-                    <td class="px-4 py-2 whitespace-nowrap">${aluno.turno}</td>
-                    <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
-                        <button class="btn-editar px-2 py-1 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
-                        <button class="btn-excluir ml-1 px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
+                    <td class="px-2 py-1 whitespace-nowrap">${aluno.nome}</td>
+                    <td class="px-2 py-1 whitespace-nowrap">${aluno.curso}</td>
+                    <td class="px-2 py-1 whitespace-nowrap">${aluno.matricula}</td>
+                    <td class="px-2 py-1 whitespace-nowrap">${aluno.turma}</td>
+                    <td class="px-2 py-1 whitespace-nowrap">${aluno.turno}</td>
+                    <td class="px-2 py-1 whitespace-nowrap text-right text-xs font-medium">
+                        <button class="btn-editar px-1 py-0.5 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
+                        <button class="btn-excluir ml-0.5 px-1 py-0.5 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
                     </td>
                 `;
             });
@@ -283,20 +304,20 @@ Paulista, ______ de ____________________ de 2025.
             if (alunosFiltrados.length === 0 && filtroNumeroSerie !== '') {
                 // If no matching students found and a serial number was searched, display message
                 const row = tabelaAlunos.insertRow();
-                row.innerHTML = `<td colspan="6" class="px-4 py-2 whitespace-nowrap text-center text-red-500 font-medium">Equipamento não localizado.</td>`;
+                row.innerHTML = `<td colspan="6" class="px-2 py-1 whitespace-nowrap text-center text-red-500 font-medium">Equipamento não localizado.</td>`;
             } else {
                 // Otherwise, populate the table with filtered students
                 alunosFiltrados.forEach((aluno, index) => {
                     const row = tabelaAlunos.insertRow();
                     row.innerHTML = `
-                        <td class="px-4 py-2 whitespace-nowrap">${aluno.nome}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">${aluno.curso}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">${aluno.matricula}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">${aluno.turma}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">${aluno.turno}</td>
-                        <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="btn-editar px-2 py-1 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
-                            <button class="btn-excluir ml-1 px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
+                        <td class="px-2 py-1 whitespace-nowrap">${aluno.nome}</td>
+                        <td class="px-2 py-1 whitespace-nowrap">${aluno.curso}</td>
+                        <td class="px-2 py-1 whitespace-nowrap">${aluno.matricula}</td>
+                        <td class="px-2 py-1 whitespace-nowrap">${aluno.turma}</td>
+                        <td class="px-2 py-1 whitespace-nowrap">${aluno.turno}</td>
+                        <td class="px-2 py-1 whitespace-nowrap text-right text-xs font-medium">
+                            <button class="btn-editar px-1 py-0.5 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarAluno(${index})">Editar</button>
+                            <button class="btn-excluir ml-0.5 px-1 py-0.5 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirAluno(${index})">Excluir</button>
                         </td>
                     `;
                 });
@@ -318,6 +339,7 @@ Paulista, ______ de ____________________ de 2025.
 
             alunoEditandoIndex = index;
             document.getElementById("submitButton").textContent = "Editar Entrega";
+            showForm(); // Show the form for editing
         }
 
         function excluirAluno(index) {
@@ -386,7 +408,8 @@ Paulista, ______ de ____________________ de 2025.
             printWindow.print();
         }
 
-        window.onload = listarAlunos;
+        // Initialize the view on page load
+        window.onload = showForm;
     </script>
 
 </body>
