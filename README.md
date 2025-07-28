@@ -566,34 +566,39 @@ Paulista, ______ de ____________________ de ${ano}.
             const filtroNumeroSerie = document.getElementById("filtroNumeroSerie").value.toLowerCase();
             const registros = JSON.parse(localStorage.getItem('registros')) || [];
 
-            const registrosFiltrados = registros.filter(registro => {
+            // When filtering, store the original index along with the record
+            const registrosFiltradosComIndex = registros.map((registro, originalIndex) => ({ registro, originalIndex }))
+                                                     .filter(item => {
+                const registro = item.registro;
                 const tipoMatch = filtroTipo ? registro.type === filtroTipo : true;
                 const turmaMatch = filtroTurma ? registro.turma === filtroTurma : true;
                 const turnoMatch = filtroTurno ? registro.turno === filtroTurno : true;
                 const anoMatch = filtroAno ? String(registro.ano) === filtroAno : true; // Match by Ano
                 const numeroSerieMatch = filtroNumeroSerie ? registro.numeroSerie.toLowerCase().includes(filtroNumeroSerie) : true;
-                return tipoMatch && turmaMatch && turnoMatch && anoMatch && numeroSerieMatch; // Include anoMatch
+                return tipoMatch && turmaMatch && turnoMatch && anoMatch && numeroSerieMatch;
             });
 
             const tabelaRegistrosBody = document.getElementById("tabelaRegistros").getElementsByTagName("tbody")[0];
             tabelaRegistrosBody.innerHTML = "";
 
-            if (registrosFiltrados.length === 0 && filtroNumeroSerie !== '') {
+            if (registrosFiltradosComIndex.length === 0 && filtroNumeroSerie !== '') {
                 const row = tabelaRegistrosBody.insertRow();
                 row.innerHTML = `<td colspan="10" class="px-2 py-1 whitespace-nowrap text-center text-red-500 font-medium">Nenhum equipamento localizado com o número de série fornecido.</td>`;
-            } else if (registrosFiltrados.length === 0) {
+            } else if (registrosFiltradosComIndex.length === 0) {
                 const row = tabelaRegistrosBody.insertRow();
                 row.innerHTML = `<td colspan="10" class="px-2 py-1 whitespace-nowrap text-center text-gray-500 font-medium">Nenhum registro encontrado com os filtros selecionados.</td>`;
             } else {
-                registrosFiltrados.forEach((registro, index) => {
+                registrosFiltradosComIndex.forEach((item) => {
+                    const registro = item.registro;
+                    const originalIndex = item.originalIndex;
                     const row = tabelaRegistrosBody.insertRow();
                     const dataDisplay = registro.type === 'entrega' ? registro.dataRegistro : registro.dataDevolucao ? new Date(registro.dataDevolucao).toLocaleDateString('pt-BR') : '';
 
                     row.innerHTML = `
                         <td class="px-2 py-1 whitespace-nowrap">${registro.type === 'entrega' ? 'Entrega' : 'Devolução'}</td>
                         <td class="px-2 py-1 whitespace-nowrap text-right text-xs font-medium actions-column">
-                            <button class="btn-editar px-1 py-0.5 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarRegistro(${index})">Editar</button>
-                            <button class="btn-excluir ml-0.5 px-1 py-0.5 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirRegistro(${index})">Excluir</button>
+                            <button class="btn-editar px-1 py-0.5 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarRegistro(${originalIndex})">Editar</button>
+                            <button class="btn-excluir ml-0.5 px-1 py-0.5 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirRegistro(${originalIndex})">Excluir</button>
                         </td>
                         <td class="px-2 py-1 whitespace-nowrap">${registro.nome}</td>
                         <td class="px-2 py-1 whitespace-nowrap">${registro.curso}</td>
