@@ -28,8 +28,8 @@
                 text-align: left;
                 display: block;
             }
-            .termo-container button, .filtro-container, .form-container, .cursos-cadastrados, h1, .choice-buttons {
-                display: none !important; /* Hide other elements when printing term */
+            .termo-container button, .filtro-container, .form-container, .cursos-cadastrados, h1, .choice-buttons, .form-buttons {
+                display: none !important; /* Hide other elements when printing term, including form buttons */
             }
             /* Specific print styles for the report */
             .print-report-only {
@@ -116,7 +116,10 @@
             <label for="numeroSerieEntrega" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Número de Série:</label>
             <input type="text" id="numeroSerieEntrega" name="numeroSerie" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
-            <button type="submit" id="submitDeliveryButton" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-6">Gerar Termo de Entrega</button>
+            <div class="form-buttons flex flex-col sm:flex-row gap-4 mt-6">
+                <button type="submit" id="submitDeliveryButton" class="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Gerar Termo de Entrega</button>
+                <button type="button" id="saveDeliveryButton" onclick="salvarAlteracoesEntrega()" class="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 hidden">Salvar Alterações</button>
+            </div>
             <button type="button" onclick="showInitialChoice()" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-4">Voltar</button>
         </form>
     </div>
@@ -171,7 +174,10 @@
             <label for="observacoesDevolucao" class="block text-sm font-medium text-gray-700 mb-1 mt-4">Observações da Devolução (Opcional):</label>
             <textarea id="observacoesDevolucao" name="observacoesDevolucao" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"></textarea>
 
-            <button type="submit" id="submitReturnButton" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mt-6">Gerar Termo de Devolução</button>
+            <div class="form-buttons flex flex-col sm:flex-row gap-4 mt-6">
+                <button type="submit" id="submitReturnButton" class="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Gerar Termo de Devolução</button>
+                <button type="button" id="saveReturnButton" onclick="salvarAlteracoesDevolucao()" class="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 hidden">Salvar Alterações</button>
+            </div>
             <button type="button" onclick="showInitialChoice()" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-4">Voltar</button>
         </form>
     </div>
@@ -297,35 +303,50 @@
 
         function showInitialChoice() {
             showSection('initialChoice');
-            // Reset forms when going back to initial choice
+            // Reset forms and edit state when going back to initial choice
             document.getElementById('formDelivery').reset();
             document.getElementById('formReturn').reset();
             registroEditandoIndex = null;
             tipoRegistroEditando = null;
+            // Ensure buttons are in default state
             document.getElementById("submitDeliveryButton").textContent = "Gerar Termo de Entrega";
+            document.getElementById("saveDeliveryButton").classList.add('hidden');
             document.getElementById("submitReturnButton").textContent = "Gerar Termo de Devolução";
+            document.getElementById("saveReturnButton").classList.add('hidden');
         }
 
-        function showDeliveryForm(resetForm = true) { // Added resetForm parameter
+        function showDeliveryForm(isEditing = false) {
             showSection('deliveryFormSection');
-            if (resetForm) {
-                document.getElementById('formDelivery').reset(); // Only reset if explicitly told to
-                document.getElementById("anoEntrega").value = new Date().getFullYear(); // Still set default year for new forms
+            if (!isEditing) {
+                document.getElementById('formDelivery').reset();
+                document.getElementById("anoEntrega").value = new Date().getFullYear();
+                registroEditandoIndex = null;
+                tipoRegistroEditando = null;
             }
-            registroEditandoIndex = null; // Reset these here, as they are set by editarRegistro
-            tipoRegistroEditando = null;
-            document.getElementById("submitDeliveryButton").textContent = "Gerar Termo de Entrega"; // Default text for new forms
+            document.getElementById("submitDeliveryButton").textContent = "Gerar Termo de Entrega";
+            // Show/hide save button based on whether we are editing
+            if (isEditing) {
+                document.getElementById("saveDeliveryButton").classList.remove('hidden');
+            } else {
+                document.getElementById("saveDeliveryButton").classList.add('hidden');
+            }
         }
 
-        function showReturnForm(resetForm = true) { // Added resetForm parameter
+        function showReturnForm(isEditing = false) {
             showSection('returnFormSection');
-            if (resetForm) {
-                document.getElementById('formReturn').reset(); // Only reset if explicitly told to
-                document.getElementById("anoDevolucao").value = new Date().getFullYear(); // Still set default year for new forms
+            if (!isEditing) {
+                document.getElementById('formReturn').reset();
+                document.getElementById("anoDevolucao").value = new Date().getFullYear();
+                registroEditandoIndex = null;
+                tipoRegistroEditando = null;
             }
-            registroEditandoIndex = null; // Reset these here, as they are set by editarRegistro
-            tipoRegistroEditando = null;
-            document.getElementById("submitReturnButton").textContent = "Gerar Termo de Devolução"; // Default text for new forms
+            document.getElementById("submitReturnButton").textContent = "Gerar Termo de Devolução";
+            // Show/hide save button based on whether we are editing
+            if (isEditing) {
+                document.getElementById("saveReturnButton").classList.remove('hidden');
+            } else {
+                document.getElementById("saveReturnButton").classList.add('hidden');
+            }
         }
 
         function showStudentsList() {
@@ -338,6 +359,19 @@
             showInitialChoice();
         }
 
+        // Helper function to save or update a record
+        function _saveOrUpdateRegistro(registro, type) {
+            let registros = JSON.parse(localStorage.getItem('registros')) || [];
+
+            if (registroEditandoIndex !== null && tipoRegistroEditando === type) {
+                registros[registroEditandoIndex] = registro;
+            } else {
+                registros.push(registro);
+            }
+            localStorage.setItem('registros', JSON.stringify(registros));
+        }
+
+
         function gerarTermoEntrega(event) {
             event.preventDefault();
 
@@ -348,7 +382,7 @@
             const turma = document.getElementById("turmaEntrega").value;
             const turno = document.getElementById("turnoEntrega").value;
             const curso = document.getElementById("cursoEntrega").value;
-            const ano = document.getElementById("anoEntrega").value; // Get Ano
+            const ano = document.getElementById("anoEntrega").value;
             const equipamento = document.getElementById("equipamentoEntrega").value;
             const numeroSerie = document.getElementById("numeroSerieEntrega").value;
             const dataRegistro = new Date().toLocaleDateString('pt-BR');
@@ -362,24 +396,17 @@
                 turma,
                 turno,
                 curso,
-                ano, // Store Ano
+                ano,
                 equipamento,
                 numeroSerie,
                 dataRegistro
             };
 
-            let registros = JSON.parse(localStorage.getItem('registros')) || [];
+            _saveOrUpdateRegistro(registro, 'entrega'); // Save/update the record first
 
-            if (registroEditandoIndex !== null && tipoRegistroEditando === 'entrega') {
-                registros[registroEditandoIndex] = registro;
-                registroEditandoIndex = null;
-                tipoRegistroEditando = null;
-                document.getElementById("submitDeliveryButton").textContent = "Gerar Termo de Entrega";
-            } else {
-                registros.push(registro);
-            }
-
-            localStorage.setItem('registros', JSON.stringify(registros));
+            // Reset edit state after saving
+            registroEditandoIndex = null;
+            tipoRegistroEditando = null;
 
             const termo = `
 
@@ -407,6 +434,56 @@ Paulista, ______ de ____________________ de ${ano}.
             showSection('termoContainer');
         }
 
+        function salvarAlteracoesEntrega() {
+            // This function is only called when editing, so no need for event.preventDefault()
+            // And form validation should be handled by 'required' attributes or a separate call
+            const formDelivery = document.getElementById('formDelivery');
+            if (!formDelivery.checkValidity()) {
+                formDelivery.reportValidity(); // Show native browser validation errors
+                return;
+            }
+
+            const nome = document.getElementById("nomeEntrega").value;
+            const cpf = document.getElementById("cpfEntrega").value;
+            const matricula = document.getElementById("matriculaEntrega").value;
+            const serie = document.getElementById("serieEntrega").value;
+            const turma = document.getElementById("turmaEntrega").value;
+            const turno = document.getElementById("turnoEntrega").value;
+            const curso = document.getElementById("cursoEntrega").value;
+            const ano = document.getElementById("anoEntrega").value;
+            const equipamento = document.getElementById("equipamentoEntrega").value;
+            const numeroSerie = document.getElementById("numeroSerieEntrega").value;
+            // Preserve original dataRegistro if available, or update if desired.
+            // For simplicity, we'll just re-read the existing one or keep it.
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            const originalDataRegistro = registros[registroEditandoIndex] ? registros[registroEditandoIndex].dataRegistro : new Date().toLocaleDateString('pt-BR');
+
+            const registro = {
+                type: 'entrega',
+                nome,
+                cpf,
+                matricula,
+                serie,
+                turma,
+                turno,
+                curso,
+                ano,
+                equipamento,
+                numeroSerie,
+                dataRegistro: originalDataRegistro // Keep original date, or update as needed
+            };
+
+            _saveOrUpdateRegistro(registro, 'entrega'); // Save/update the record
+
+            // Reset edit state
+            registroEditandoIndex = null;
+            tipoRegistroEditando = null;
+
+            showStudentsList(); // Go back to the list view
+            alert("Alterações salvas com sucesso!");
+        }
+
+
         function gerarTermoDevolucao(event) {
             event.preventDefault();
 
@@ -417,13 +494,13 @@ Paulista, ______ de ____________________ de ${ano}.
             const turma = document.getElementById("turmaDevolucao").value;
             const turno = document.getElementById("turnoDevolucao").value;
             const curso = document.getElementById("cursoDevolucao").value;
-            const ano = document.getElementById("anoDevolucao").value; // Get Ano
+            const ano = document.getElementById("anoDevolucao").value;
             const equipamento = document.getElementById("equipamentoDevolucao").value;
             const numeroSerie = document.getElementById("numeroSerieDevolucao").value;
-            const dataDevolucao = document.getElementById("dataDevolucao").value; // YYYY-MM-DD
+            const dataDevolucao = document.getElementById("dataDevolucao").value;
             const condicaoDevolucao = document.getElementById("condicaoDevolucao").value;
             const observacoesDevolucao = document.getElementById("observacoesDevolucao").value;
-            const dataRegistro = new Date().toLocaleDateString('pt-BR');
+            const dataRegistro = new Date().toLocaleDateString('pt-BR'); // This refers to the date the record itself was created/last modified
 
             const registro = {
                 type: 'devolucao',
@@ -434,27 +511,21 @@ Paulista, ______ de ____________________ de ${ano}.
                 turma,
                 turno,
                 curso,
-                ano, // Store Ano
+                ano,
                 equipamento,
                 numeroSerie,
-                dataDevolucao,
+                dataDevolucao, // This is the date of return
                 condicaoDevolucao,
                 observacoesDevolucao,
                 dataRegistro
             };
 
-            let registros = JSON.parse(localStorage.getItem('registros')) || [];
+            _saveOrUpdateRegistro(registro, 'devolucao'); // Save/update the record first
 
-            if (registroEditandoIndex !== null && tipoRegistroEditando === 'devolucao') {
-                registros[registroEditandoIndex] = registro;
-                registroEditandoIndex = null;
-                tipoRegistroEditando = null;
-                document.getElementById("submitReturnButton").textContent = "Gerar Termo de Devolução";
-            } else {
-                registros.push(registro);
-            }
+            // Reset edit state after saving
+            registroEditandoIndex = null;
+            tipoRegistroEditando = null;
 
-            localStorage.setItem('registros', JSON.stringify(registros));
 
             const termo = `
 
@@ -482,6 +553,59 @@ Paulista, ______ de ____________________ de ${ano}.
             document.getElementById("termoTitle").textContent = "Termo de Devolução de Equipamento Eletrônico";
             document.getElementById("termoTexto").textContent = termo;
             showSection('termoContainer');
+        }
+
+        function salvarAlteracoesDevolucao() {
+            const formReturn = document.getElementById('formReturn');
+            if (!formReturn.checkValidity()) {
+                formReturn.reportValidity();
+                return;
+            }
+
+            const nome = document.getElementById("nomeDevolucao").value;
+            const cpf = document.getElementById("cpfDevolucao").value;
+            const matricula = document.getElementById("matriculaDevolucao").value;
+            const serie = document.getElementById("serieDevolucao").value;
+            const turma = document.getElementById("turmaDevolucao").value;
+            const turno = document.getElementById("turnoDevolucao").value;
+            const curso = document.getElementById("cursoDevolucao").value;
+            const ano = document.getElementById("anoDevolucao").value;
+            const equipamento = document.getElementById("equipamentoDevolucao").value;
+            const numeroSerie = document.getElementById("numeroSerieDevolucao").value;
+            const dataDevolucao = document.getElementById("dataDevolucao").value;
+            const condicaoDevolucao = document.getElementById("condicaoDevolucao").value;
+            const observacoesDevolucao = document.getElementById("observacoesDevolucao").value;
+            // Preserve original dataRegistro if available
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            const originalDataRegistro = registros[registroEditandoIndex] ? registros[registroEditandoIndex].dataRegistro : new Date().toLocaleDateString('pt-BR');
+
+
+            const registro = {
+                type: 'devolucao',
+                nome,
+                cpf,
+                matricula,
+                serie,
+                turma,
+                turno,
+                curso,
+                ano,
+                equipamento,
+                numeroSerie,
+                dataDevolucao,
+                condicaoDevolucao,
+                observacoesDevolucao,
+                dataRegistro: originalDataRegistro
+            };
+
+            _saveOrUpdateRegistro(registro, 'devolucao'); // Save/update the record
+
+            // Reset edit state
+            registroEditandoIndex = null;
+            tipoRegistroEditando = null;
+
+            showStudentsList(); // Go back to the list view
+            alert("Alterações salvas com sucesso!");
         }
 
         function listarRegistros() {
@@ -564,18 +688,17 @@ Paulista, ______ de ____________________ de ${ano}.
             const filtroTipo = document.getElementById("filtroTipo").value;
             const filtroTurma = document.getElementById("filtroTurma").value;
             const filtroTurno = document.getElementById("filtroTurno").value;
-            const filtroAno = document.getElementById("filtroAno").value; // Get Ano filter value
+            const filtroAno = document.getElementById("filtroAno").value;
             const filtroNumeroSerie = document.getElementById("filtroNumeroSerie").value.toLowerCase();
             const registros = JSON.parse(localStorage.getItem('registros')) || [];
 
-            // When filtering, store the original index along with the record
             const registrosFiltradosComIndex = registros.map((registro, originalIndex) => ({ registro, originalIndex }))
                                                      .filter(item => {
                 const registro = item.registro;
                 const tipoMatch = filtroTipo ? registro.type === filtroTipo : true;
                 const turmaMatch = filtroTurma ? registro.turma === filtroTurma : true;
                 const turnoMatch = filtroTurno ? registro.turno === filtroTurno : true;
-                const anoMatch = filtroAno ? String(registro.ano) === filtroAno : true; // Match by Ano
+                const anoMatch = filtroAno ? String(registro.ano) === filtroAno : true;
                 const numeroSerieMatch = filtroNumeroSerie ? registro.numeroSerie.toLowerCase().includes(filtroNumeroSerie) : true;
                 return tipoMatch && turmaMatch && turnoMatch && anoMatch && numeroSerieMatch;
             });
@@ -630,11 +753,11 @@ Paulista, ______ de ____________________ de ${ano}.
                 document.getElementById("turmaEntrega").value = registro.turma;
                 document.getElementById("turnoEntrega").value = registro.turno;
                 document.getElementById("cursoEntrega").value = registro.curso;
-                document.getElementById("anoEntrega").value = registro.ano; // Set Ano
+                document.getElementById("anoEntrega").value = registro.ano;
                 document.getElementById("equipamentoEntrega").value = registro.equipamento;
                 document.getElementById("numeroSerieEntrega").value = registro.numeroSerie;
-                document.getElementById("submitDeliveryButton").textContent = "Atualizar Entrega";
-                showDeliveryForm(false); // Pass false to prevent resetting the form
+                
+                showDeliveryForm(true); // Pass true to indicate editing mode
             } else if (registro.type === 'devolucao') {
                 document.getElementById("nomeDevolucao").value = registro.nome;
                 document.getElementById("cpfDevolucao").value = registro.cpf;
@@ -643,14 +766,14 @@ Paulista, ______ de ____________________ de ${ano}.
                 document.getElementById("turmaDevolucao").value = registro.turma;
                 document.getElementById("turnoDevolucao").value = registro.turno;
                 document.getElementById("cursoDevolucao").value = registro.curso;
-                document.getElementById("anoDevolucao").value = registro.ano; // Set Ano
+                document.getElementById("anoDevolucao").value = registro.ano;
                 document.getElementById("equipamentoDevolucao").value = registro.equipamento;
                 document.getElementById("numeroSerieDevolucao").value = registro.numeroSerie;
                 document.getElementById("dataDevolucao").value = registro.dataDevolucao;
                 document.getElementById("condicaoDevolucao").value = registro.condicaoDevolucao;
                 document.getElementById("observacoesDevolucao").value = registro.observacoesDevolucao;
-                document.getElementById("submitReturnButton").textContent = "Atualizar Devolução";
-                showReturnForm(false); // Pass false to prevent resetting the form
+                
+                showReturnForm(true); // Pass true to indicate editing mode
             }
         }
 
@@ -672,16 +795,16 @@ Paulista, ______ de ____________________ de ${ano}.
             const filtroTipo = document.getElementById("filtroTipo").value;
             const filtroTurma = document.getElementById("filtroTurma").value;
             const filtroTurno = document.getElementById("filtroTurno").value;
-            const filtroAno = document.getElementById("filtroAno").value; // Get Ano filter value
+            const filtroAno = document.getElementById("filtroAno").value;
             const filtroNumeroSerie = document.getElementById("filtroNumeroSerie").value.toLowerCase();
 
             const registrosParaRelatorio = registros.filter(registro => {
                 const tipoMatch = filtroTipo ? registro.type === filtroTipo : true;
                 const turmaMatch = filtroTurma ? registro.turma === filtroTurma : true;
                 const turnoMatch = filtroTurno ? registro.turno === filtroTurno : true;
-                const anoMatch = filtroAno ? String(registro.ano) === filtroAno : true; // Match by Ano
+                const anoMatch = filtroAno ? String(registro.ano) === filtroAno : true;
                 const numeroSerieMatch = filtroNumeroSerie ? registro.numeroSerie.toLowerCase().includes(filtroNumeroSerie) : true;
-                return tipoMatch && turmaMatch && turnoMatch && anoMatch && numeroSerieMatch; // Include anoMatch
+                return tipoMatch && turmaMatch && turnoMatch && anoMatch && numeroSerieMatch;
             });
 
             let relatorioContent = `
