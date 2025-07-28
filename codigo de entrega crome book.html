@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro e Devolução de Equipamento no Ano de 2025</title>
+    <title>Sistema de Gestão de Equipamentos - 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -245,6 +245,35 @@
         let registroEditandoIndex = null;
         let tipoRegistroEditando = null; // To keep track if we are editing 'entrega' or 'devolucao'
 
+        // One-time data migration from 'alunos' to 'registros'
+        (function() {
+            let currentRegistros = JSON.parse(localStorage.getItem('registros')) || [];
+            if (currentRegistros.length === 0) {
+                const oldAlunosData = JSON.parse(localStorage.getItem('alunos'));
+                if (oldAlunosData && oldAlunosData.length > 0) {
+                    console.log("Migrando dados antigos da chave 'alunos' para 'registros'...");
+                    const migratedRecords = oldAlunosData.map(aluno => ({
+                        type: 'entrega', // Assuming old 'alunos' data was for 'entrega' type
+                        nome: aluno.nome,
+                        cpf: aluno.cpf || '', // Add default empty string if missing
+                        matricula: aluno.matricula,
+                        serie: aluno.serie || '',
+                        turma: aluno.turma,
+                        turno: aluno.turno,
+                        curso: aluno.curso,
+                        ano: '2025', // Default year, as inferred from old term
+                        equipamento: aluno.equipamento,
+                        numeroSerie: aluno.numeroSerie,
+                        dataRegistro: new Date().toLocaleDateString('pt-BR') // Assign current date
+                    }));
+                    localStorage.setItem('registros', JSON.stringify(migratedRecords));
+                    localStorage.removeItem('alunos'); // Clear old data after successful migration
+                    console.log("Migração concluída. Dados antigos movidos para 'registros'.");
+                }
+            }
+        })();
+
+
         // Function to show/hide sections
         function showSection(sectionId) {
             document.getElementById('initialChoice').classList.add('hidden');
@@ -449,9 +478,9 @@ Paulista, ______ de ____________________ de ${ano}.
             tabelaRegistrosBody.innerHTML = "";
 
             registros.forEach((registro, index) => {
-                const row = tabelaRegistrosBody.insertRow();
                 const dataDisplay = registro.type === 'entrega' ? registro.dataRegistro : registro.dataDevolucao ? new Date(registro.dataDevolucao).toLocaleDateString('pt-BR') : '';
 
+                const row = tabelaRegistrosBody.insertRow();
                 row.innerHTML = `
                     <td class="px-2 py-1 whitespace-nowrap">${registro.type === 'entrega' ? 'Entrega' : 'Devolução'}</td>
                     <td class="px-2 py-1 whitespace-nowrap">${registro.nome}</td>
