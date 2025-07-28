@@ -52,6 +52,16 @@
                 background-color: #f2f2f2;
             }
         }
+
+        /* Ensure actions column has enough width */
+        .actions-column {
+            min-width: 120px; /* Adjust as needed to fit buttons */
+            width: 120px; /* Give it a fixed width */
+        }
+        /* Make sure table itself is responsive and columns can grow/shrink within bounds */
+        #tabelaRegistros {
+            table-layout: auto; /* Allow column widths to adjust to content */
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center p-4 font-inter text-gray-800">
@@ -231,7 +241,7 @@
                         <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turno</th>
                         <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nº Série</th>
                         <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
-                        <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider actions-column">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -491,7 +501,7 @@ Paulista, ______ de ____________________ de ${ano}.
                     <td class="px-2 py-1 whitespace-nowrap">${registro.turno}</td>
                     <td class="px-2 py-1 whitespace-nowrap">${registro.numeroSerie}</td>
                     <td class="px-2 py-1 whitespace-nowrap">${dataDisplay}</td>
-                    <td class="px-2 py-1 whitespace-nowrap text-right text-xs font-medium">
+                    <td class="px-2 py-1 whitespace-nowrap text-right text-xs font-medium actions-column">
                         <button class="btn-editar px-1 py-0.5 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarRegistro(${index})">Editar</button>
                         <button class="btn-excluir ml-0.5 px-1 py-0.5 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirRegistro(${index})">Excluir</button>
                     </td>
@@ -589,7 +599,7 @@ Paulista, ______ de ____________________ de ${ano}.
                         <td class="px-2 py-1 whitespace-nowrap">${registro.turno}</td>
                         <td class="px-2 py-1 whitespace-nowrap">${registro.numeroSerie}</td>
                         <td class="px-2 py-1 whitespace-nowrap">${dataDisplay}</td>
-                        <td class="px-2 py-1 whitespace-nowrap text-right text-xs font-medium">
+                        <td class="px-2 py-1 whitespace-nowrap text-right text-xs font-medium actions-column">
                             <button class="btn-editar px-1 py-0.5 text-xs font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="editarRegistro(${index})">Editar</button>
                             <button class="btn-excluir ml-0.5 px-1 py-0.5 text-xs font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="excluirRegistro(${index})">Excluir</button>
                         </td>
