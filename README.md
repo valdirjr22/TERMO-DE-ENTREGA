@@ -306,24 +306,26 @@
             document.getElementById("submitReturnButton").textContent = "Gerar Termo de Devolução";
         }
 
-        function showDeliveryForm() {
+        function showDeliveryForm(resetForm = true) { // Added resetForm parameter
             showSection('deliveryFormSection');
-            document.getElementById('formDelivery').reset(); // Clear form when showing
-            // Set default year for delivery form
-            document.getElementById("anoEntrega").value = new Date().getFullYear();
-            registroEditandoIndex = null;
+            if (resetForm) {
+                document.getElementById('formDelivery').reset(); // Only reset if explicitly told to
+                document.getElementById("anoEntrega").value = new Date().getFullYear(); // Still set default year for new forms
+            }
+            registroEditandoIndex = null; // Reset these here, as they are set by editarRegistro
             tipoRegistroEditando = null;
-            document.getElementById("submitDeliveryButton").textContent = "Gerar Termo de Entrega";
+            document.getElementById("submitDeliveryButton").textContent = "Gerar Termo de Entrega"; // Default text for new forms
         }
 
-        function showReturnForm() {
+        function showReturnForm(resetForm = true) { // Added resetForm parameter
             showSection('returnFormSection');
-            document.getElementById('formReturn').reset(); // Clear form when showing
-            // Set default year for return form
-            document.getElementById("anoDevolucao").value = new Date().getFullYear();
-            registroEditandoIndex = null;
+            if (resetForm) {
+                document.getElementById('formReturn').reset(); // Only reset if explicitly told to
+                document.getElementById("anoDevolucao").value = new Date().getFullYear(); // Still set default year for new forms
+            }
+            registroEditandoIndex = null; // Reset these here, as they are set by editarRegistro
             tipoRegistroEditando = null;
-            document.getElementById("submitReturnButton").textContent = "Gerar Termo de Devolução";
+            document.getElementById("submitReturnButton").textContent = "Gerar Termo de Devolução"; // Default text for new forms
         }
 
         function showStudentsList() {
@@ -632,7 +634,7 @@ Paulista, ______ de ____________________ de ${ano}.
                 document.getElementById("equipamentoEntrega").value = registro.equipamento;
                 document.getElementById("numeroSerieEntrega").value = registro.numeroSerie;
                 document.getElementById("submitDeliveryButton").textContent = "Atualizar Entrega";
-                showDeliveryForm();
+                showDeliveryForm(false); // Pass false to prevent resetting the form
             } else if (registro.type === 'devolucao') {
                 document.getElementById("nomeDevolucao").value = registro.nome;
                 document.getElementById("cpfDevolucao").value = registro.cpf;
@@ -648,7 +650,7 @@ Paulista, ______ de ____________________ de ${ano}.
                 document.getElementById("condicaoDevolucao").value = registro.condicaoDevolucao;
                 document.getElementById("observacoesDevolucao").value = registro.observacoesDevolucao;
                 document.getElementById("submitReturnButton").textContent = "Atualizar Devolução";
-                showReturnForm();
+                showReturnForm(false); // Pass false to prevent resetting the form
             }
         }
 
